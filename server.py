@@ -33,7 +33,7 @@ async def archivate(request):
                 break
 
             if request.app.args.delay:
-                await asyncio.sleep(1)  # Для имитации медленного коннекта
+                await asyncio.sleep(1)
 
     except asyncio.CancelledError:
         process.kill()
