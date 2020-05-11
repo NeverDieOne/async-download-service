@@ -6,6 +6,8 @@ import os
 import logging
 import argparse
 
+CHUNK_SIZE = 500 * 1024  # ~500KB
+
 
 async def archivate(request):
     photos_path = request.app.args.path
@@ -27,7 +29,7 @@ async def archivate(request):
                                                    stderr=asyncio.subprocess.PIPE)
     try:
         while True:
-            archive_chunk = await process.stdout.readline()
+            archive_chunk = await process.stdout.read(CHUNK_SIZE)
             await response.write(archive_chunk)
             if not archive_chunk:
                 break
@@ -41,6 +43,8 @@ async def archivate(request):
 
         if request.app.args.logging:
             logging.info('Download was interrupted')
+
+        raise
     finally:
         return response
 
